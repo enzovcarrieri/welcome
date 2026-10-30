@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>welcome</title>
+<meta name="description" content="brands, design, creative coding and ai, usually all at once. Enzo Carrieri.">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:title" content="welcome">
+<meta property="og:description" content="brands, design, creative coding and ai, usually all at once">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath d='M32 8C17 8 5 18 5 31c0 7 3.6 13.3 9.4 17.6-.6 3.6-2.5 6.9-5.4 9.4 5.4.2 10.2-1.7 13.6-4.9 3 .9 6.2 1.4 9.4 1.4 15 0 27-10 27-23.5S47 8 32 8z' fill='%23007AFF'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<script>
+  // theme before first paint (saved choice, else system), and mark JS on
+  (function () {
+    var d = document.documentElement, t = null;
+    try { t = localStorage.getItem('theme'); } catch (e) {}
+    if (t !== 'light' && t !== 'dark') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    d.dataset.theme = t;
+    d.classList.add('js');
+  })();
+</script>
+<style>
+  :root {
+    --bg: #fff;
+    --label: #1d1d1f;
+    --label-2: rgba(0, 0, 0, .46);
+    --label-3: rgba(0, 0, 0, .26);
+    --blue: #007AFF;
+    --blue-press: #0066D6;
+    --gray: #E9E9EB;
+    --gray-text: #000;
+    --dot: rgba(0, 0, 0, .35);
+    --green: #34C759;
+    --switch-off: rgba(120, 120, 128, .2);
+
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", "Segoe UI", system-ui, sans-serif;
+    --emoji: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif;
+    --spring: cubic-bezier(.22, 1.35, .36, 1);
+    --ease: cubic-bezier(.2, .8, .2, 1);
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --bg: #000;
+    --label: rgba(255, 255, 255, .92);
+    --label-2: rgba(255, 255, 255, .46);
+    --label-3: rgba(255, 255, 255, .24);
+    --blue: #0A84FF;
+    --blue-press: #3399FF;
+    --gray: #262629;
+    --gray-text: #fff;
+    --dot: rgba(255, 255, 255, .4);
+    --green: #30D158;
+    --switch-off: rgba(120, 120, 128, .36);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font);
+    font-size: 12px;
+    line-height: 1.4;
+    background: var(--bg);
+    color: var(--label);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+  a { color: inherit; -webkit-tap-highlight-color: transparent; }
+  button { font: inherit; color: inherit; -webkit-tap-highlight-color: transparent; }
+  p { margin: 0; }
+
+  /* ---------- top corner ---------- */
+  /* frosted bar under the contact and switch, bubbles scroll beneath it */
+  body::before {
+    content: "";
+    position: fixed;
+    z-index: 9;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: calc(max(14px, env(safe-area-inset-top)) + 104px);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
+    -webkit-backdrop-filter: blur(18px) saturate(180%);
+            backdrop-filter: blur(18px) saturate(180%);
+    -webkit-mask-image: linear-gradient(#000 70%, transparent);
+            mask-image: linear-gradient(#000 70%, transparent);
+    pointer-events: none;
+  }
+  .corner {
+    position: fixed;
+    z-index: 10;
+    top: max(18px, env(safe-area-inset-top));
+    display: flex;
+    align-items: center;
+    height: 18px;
+  }
+  .corner-r { right: max(20px, env(safe-area-inset-right)); }
+
+  .theme {
+    position: relative;
+    width: 30px;
+    height: 18px;
+    padding: 0;
+    border: 0;
+    border-radius: 18px;
+    background: var(--switch-off);
+    cursor: pointer;
+    transition: background-color .3s var(--ease);
+  }
+  :root[data-theme="dark"] .theme { background: var(--green); }
+  .theme::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 1.5px 4px rgba(0, 0, 0, .2), 0 .5px 1px rgba(0, 0, 0, .06);
+    transition: transform .45s var(--spring), width .2s var(--ease);
+  }
+  :root[data-theme="dark"] .theme::after { transform: translateX(12px); }
+  .theme:active::after { width: 18px; }
+  :root[data-theme="dark"] .theme:active::after { transform: translateX(8px); }
+  .theme:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  /* ---------- chat ---------- */
+  main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: 0 16px;
+    overflow-x: clip;
+  }
+  /* new messages land at the bottom and push the rest up, like iMessage */
+  .chat {
+    position: relative;
+    width: 100%;
+    max-width: 360px;
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: calc(max(14px, env(safe-area-inset-top)) + 112px) 6px max(28px, env(safe-area-inset-bottom));
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+  }
+
+  .contact {
+    position: fixed;
+    z-index: 10;
+    top: max(14px, env(safe-area-inset-top));
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    pointer-events: none;
+    animation: fade .7s var(--ease) .15s both;
+  }
+  .contact > * { pointer-events: auto; }
+  .avatar {
+    display: block;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #F3F2EF;
+    box-shadow: 0 0 0 .5px rgba(0, 0, 0, .08);
+    transition: transform .5s var(--spring);
+  }
+  .avatar:hover { transform: scale(1.08) rotate(-4deg); }
+  .contact-name {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--gray);
+    font-size: 10.5px;
+  }
+  .contact-name svg { width: 6px; height: 6px; color: var(--label-3); }
+  .stamp {
+    margin-bottom: 12px;
+    text-align: center;
+    font-size: 10px;
+    line-height: 1.35;
+    color: var(--label-2);
+    animation: fade .7s var(--ease) .3s both;
+  }
+  .stamp b { font-weight: 600; }
+  @keyframes fade { from { opacity: 0; transform: translateY(4px); } }
+
+  .msg {
+    position: relative;
+    max-width: 76%;
+    padding: 6px 11px 7px;
+    border-radius: 17px;
+    font-size: 14px;
+    line-height: 1.3;
+    letter-spacing: -.01em;
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+    margin-top: 2px;
+    z-index: 0;
+  }
+  .me { align-self: flex-end; background: var(--blue); color: #fff; transform-origin: 100% 100%; }
+  .them { align-self: flex-start; background: var(--gray); color: var(--gray-text); transform-origin: 0 100%; }
+  .me + .them, .them + .me, .emoji + .msg, .msg + .emoji { margin-top: 10px; }
+
+  /* tails on the last bubble of each group */
+  .tail::before, .tail::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    bottom: 0;
+    height: 17px;
+  }
+  .me.tail::before { right: -7px; width: 20px; background: var(--blue); border-bottom-left-radius: 16px 14px; }
+  .me.tail::after { right: -26px; width: 26px; background: var(--bg); border-bottom-left-radius: 10px; }
+  .them.tail::before { left: -7px; width: 20px; background: var(--gray); border-bottom-right-radius: 16px 14px; }
+  .them.tail::after { left: -26px; width: 26px; background: var(--bg); border-bottom-right-radius: 10px; }
+
+  /* jumbo emoji, no bubble */
+  .emoji {
+    position: relative;
+    align-self: flex-end;
+    padding: 0 2px;
+    font-family: var(--emoji);
+    font-size: 40px;
+    line-height: 1.1;
+    letter-spacing: 2px;
+    transform-origin: 80% 100%;
+  }
+
+  a.msg { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; transition: background-color .2s var(--ease), transform .4s var(--spring); }
+  a.msg:hover { background: var(--blue-press); }
+  a.msg.tail:hover::before { background: var(--blue-press); }
+  a.msg:active { transform: scale(.97); }
+  a.msg:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+
+  /* tapback */
+  .tap {
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--gray);
+    box-shadow: 0 0 0 2px var(--bg);
+    font-family: var(--emoji);
+    font-size: 13px;
+    line-height: 1;
+    opacity: 0;
+    transform: scale(.3);
+  }
+  .tap.on { animation: tapIn .55s var(--spring) both; }
+  @keyframes tapIn { from { opacity: 0; transform: scale(.3) rotate(-20deg); } to { opacity: 1; transform: none; } }
+
+  /* each message keeps the real time it arrived; drag the chat left to peek, like iMessage */
+  .ts {
+    position: absolute;
+    top: 50%;
+    font-family: var(--font);
+    font-size: 10px;
+    line-height: 1;
+    letter-spacing: 0;
+    color: var(--label-2);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+    text-decoration: none;
+    pointer-events: none;
+    transform: translateY(-50%);
+    opacity: var(--p);
+    transition: opacity .3s var(--ease), translate .55s var(--spring);
+  }
+  .me .ts, .emoji .ts { left: calc(100% + 12px); }
+  .them .ts { left: var(--tl, calc(100% + 12px)); translate: var(--drag) 0; }
+
+  .chat { --drag: 0px; --p: 0; touch-action: pan-y; }
+  .chat a { -webkit-user-drag: none; }
+  .me, .emoji, .receipt { translate: var(--drag) 0; transition: translate .55s var(--spring); }
+  a.msg { transition: background-color .2s var(--ease), transform .4s var(--spring), translate .55s var(--spring); }
+  .chat.dragging { -webkit-user-select: none; user-select: none; cursor: grabbing; }
+  .chat.dragging .seq, .chat.dragging .ts { transition: none; }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+
+  .receipt {
+    align-self: flex-end;
+    margin-top: 3px;
+    font-size: 10px;
+    color: var(--label-2);
+  }
+  .receipt b { font-weight: 600; }
+
+  /* reveal sequence (only with JS) */
+  .js .seq:not(.show) { display: none; }
+  .seq.show { animation: pop .5s var(--spring) both; }
+  .emoji.show { animation: popBig .7s var(--spring) both; }
+  .receipt.show { animation: fade .4s var(--ease) both; }
+  @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.82); } }
+  @keyframes popBig { from { opacity: 0; transform: translateY(14px) scale(.2) rotate(-14deg); } }
+
+  /* typing indicator */
+  .typing {
+    position: relative;
+    display: none;
+    align-self: flex-start;
+    gap: 3.5px;
+    margin-top: 10px;
+    padding: 9px 11px;
+    border-radius: 17px;
+    background: var(--gray);
+    transform-origin: 0 100%;
+    pointer-events: none;
+  }
+  .typing.right { align-self: flex-end; transform-origin: 100% 100%; }
+  .typing.on { display: flex; animation: pop .4s var(--spring) both; }
+  .typing::before, .typing::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    background: var(--gray);
+  }
+  .typing::before { width: 9px; height: 9px; left: -1px; bottom: -1px; }
+  .typing::after { width: 4.5px; height: 4.5px; left: -5px; bottom: -5px; }
+  .typing.right::before { left: auto; right: -1px; }
+  .typing.right::after { left: auto; right: -5px; }
+  .typing i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--dot);
+    animation: dots 1.2s ease-in-out infinite;
+  }
+  .typing i:nth-child(2) { animation-delay: .15s; }
+  .typing i:nth-child(3) { animation-delay: .3s; }
+  @keyframes dots {
+    0%, 60%, 100% { opacity: .45; transform: none; }
+    30% { opacity: 1; transform: translateY(-2px); }
+  }
+
+  /* appearance change cross-dissolves like iOS */
+  ::view-transition-old(root),
+  ::view-transition-new(root) { animation-duration: .5s; animation-timing-function: cubic-bezier(.4, 0, .2, 1); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; }
+    .tap { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="sr-only">welcome</h1>
+<div class="corner corner-r">
+  <button class="theme" type="button" role="switch" aria-checked="false" aria-label="dark mode"></button>
+</div>
+
+<header class="contact">
+  <img class="avatar" src="avatar.png" width="56" height="56" alt="enzo carrieri, pixel-art portrait">
+  <span class="contact-name">enzo carrieri <svg viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4-4 4"/></svg></span>
+</header>
+
+<main>
+  <section class="chat" aria-label="conversation with enzo carrieri">
+    <p class="stamp"><b>iMessage</b><br>today <span id="stamp-time"></span></p>
+
+    <p class="msg them tail seq">hi! who’s this?</p>
+
+    <p class="msg me tail seq">hey, i’m enzo 👋</p>
+    <p class="emoji seq" role="img" aria-label="Brazilian and Italian flags">🇧🇷🇮🇹</p>
+
+    <p class="msg me seq widow">brands, design, creative coding and ai, usually all at once<span class="tap" aria-label="loved">❤️</span></p>
+    <p class="msg me seq widow">8+ years across consultancies, in‑house teams and agencies</p>
+    <p class="msg me tail seq">now working independently</p>
+
+    <p class="msg them tail seq">where can i see your work?</p>
+
+    <p class="msg me seq">professional portfolio 👇</p>
+    <a class="msg me tail seq" href="https://work.enzocarrieri.com" target="_blank" rel="noopener">work.enzocarrieri.com</a>
+
+    <p class="msg them tail seq">and other stuff?</p>
+
+    <p class="msg me seq">parallel projects ✨</p>
+    <a class="msg me seq" href="https://dockcompanion.co" target="_blank" rel="noopener">dockcompanion.co</a>
+    <a class="msg me seq" href="https://enzovcarrieri.github.io/untitled-grid" target="_blank" rel="noopener">enzovcarrieri.github.io/untitled-grid</a>
+    <a class="msg me tail seq" href="https://weather-roulette.online" target="_blank" rel="noopener">weather-roulette.online</a>
+
+    <p class="msg them tail seq">how do i reach you?</p>
+
+    <a class="msg me seq" href="mailto:enzo.carrieri.work@gmail.com">enzo.carrieri.work@gmail.com</a>
+    <a class="msg me seq" href="https://instagram.com/enzocarrieri" target="_blank" rel="noopener">instagram.com/enzocarrieri</a>
+    <a class="msg me tail seq" href="https://linkedin.com/in/carrierienzo" target="_blank" rel="noopener">linkedin.com/in/carrierienzo</a>
+
+    <p class="receipt seq" id="receipt">delivered</p>
+
+    <div class="typing" aria-hidden="true"><i></i><i></i><i></i></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const root = document.documentElement;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+
+  /* ---------- no widows: bind the last two words ---------- */
+  document.querySelectorAll('.widow').forEach(el => {
+    const t = el.firstChild;
+    if (t && t.nodeType === 3) t.nodeValue = t.nodeValue.replace(/\s+(\S+)\s*$/, ' $1');
+  });
+
+  /* ---------- theme ---------- */
+  const toggle = document.querySelector('.theme');
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const sync = () => {
+    const dark = root.dataset.theme === 'dark';
+    toggle.setAttribute('aria-checked', String(dark));
+    meta.setAttribute('content', dark ? '#000000' : '#ffffff');
+  };
+  const setTheme = (t, save) => {
+    root.dataset.theme = t;
+    if (save) { try { localStorage.setItem('theme', t); } catch (e) {} }
+    sync();
+  };
+  sync();
+
+  toggle.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    if (!document.startViewTransition || reduced) return setTheme(next, true);
+    document.startViewTransition(() => setTheme(next, true));
+  });
+
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    let saved = null;
+    try { saved = localStorage.getItem('theme'); } catch (err) {}
+    if (!saved) setTheme(e.matches ? 'dark' : 'light', false);
+  });
+
+  /* ---------- visitor's time for the chat stamp ---------- */
+  const tf = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' });
+  const tfs = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  const timeNow = () => tf.format(new Date()).toLowerCase();
+  const stampTime = document.getElementById('stamp-time');
+  const tickStamp = () => { stampTime.textContent = timeNow(); };
+  tickStamp();
+  setInterval(tickStamp, 1000);
+
+  // stamp a message with the moment it actually arrived
+  const stamp = el => {
+    if (el.querySelector('.ts') || el.classList.contains('receipt')) return;
+    const now = new Date();
+    const t = document.createElement('time');
+    t.className = 'ts';
+    t.dateTime = now.toISOString();
+    t.setAttribute('aria-hidden', 'true');
+    t.textContent = tfs.format(now).toLowerCase();
+    el.appendChild(t);
+  };
+
+  /* ---------- the conversation plays out ---------- */
+  const seq = [...document.querySelectorAll('.seq')];
+  const typing = document.querySelector('.typing');
+  const tap = document.querySelector('.tap');
+  const receipt = document.getElementById('receipt');
+
+  const markRead = () => { receipt.innerHTML = `<b>read</b> ${timeNow()}`; };
+  const showAll = () => {
+    seq.forEach(el => { stamp(el); el.classList.add('show'); });
+    tap.classList.add('on');
+    markRead();
+  };
+
+  // apply a change, keep the newest message in view, and glide everything
+  // that moved into its new place instead of jumping
+  const chatEl = document.querySelector('.chat');
+  const nearBottom = () => innerHeight + scrollY >= document.documentElement.scrollHeight - 160;
+  const flip = mutate => {
+    const stick = nearBottom();
+    const items = [...chatEl.children].filter(el => el.getClientRects().length);
+    const before = items.map(el => el.getBoundingClientRect().top);
+    mutate();
+    if (stick) scrollTo({ top: document.documentElement.scrollHeight, behavior: 'instant' });
+    items.forEach((el, i) => {
+      if (!el.getClientRects().length) return;
+      const d = before[i] - el.getBoundingClientRect().top;
+      if (Math.abs(d) > .5) {
+        el.animate([{ translate: `0 ${d}px` }, { translate: '0 0' }], { duration: 480, easing: 'cubic-bezier(.2, .9, .3, 1)' });
+      }
+    });
+  };
+
+  const play = async () => {
+    await wait(700);
+    let prev = null;
+    for (const el of seq) {
+      const right = !el.classList.contains('them');
+      if (el !== receipt) {
+        // the typing bubble lands first, then turns into the message
+        const sameSide = prev && prev.classList.contains('them') !== right;
+        const len = el.textContent.length;
+        typing.classList.toggle('right', right);
+        typing.style.marginTop = sameSide ? '2px' : '10px';
+        chatEl.insertBefore(typing, el);
+        flip(() => typing.classList.add('on'));
+        await wait(Math.min(sameSide ? 380 + len * 9 : 650 + len * 14, 1300));
+        flip(() => {
+          typing.classList.remove('on');
+          chatEl.appendChild(typing);
+          stamp(el);
+          el.classList.add('show');
+        });
+      } else {
+        await wait(300);
+        flip(() => el.classList.add('show'));
+      }
+      if (el.contains(tap)) setTimeout(() => tap.classList.add('on'), 700);
+      prev = el;
+      await wait(el.classList.contains('them') ? 450 : 160);
+    }
+    await wait(1600);
+    receipt.style.animation = 'none';
+    void receipt.offsetWidth;
+    receipt.style.animation = '';
+    markRead();
+  };
+
+  /* ---------- drag the chat left to reveal the times ---------- */
+  const chat = document.querySelector('.chat');
+  chat.querySelectorAll('a').forEach(a => { a.draggable = false; });
+  let start = null, dragged = false;
+
+  // times of incoming bubbles line up in the same column as the sent ones
+  const lineUp = () => {
+    const right = chat.clientWidth - parseFloat(getComputedStyle(chat).paddingRight);
+    chat.querySelectorAll('.them .ts').forEach(t => {
+      t.style.setProperty('--tl', (right - t.parentElement.offsetLeft + 12) + 'px');
+    });
+  };
+  chat.addEventListener('pointerdown', e => {
+    if (e.button > 0) return;
+    start = { x: e.clientX, y: e.clientY, id: e.pointerId };
+    dragged = false;
+  });
+  addEventListener('pointermove', e => {
+    if (!start || e.pointerId !== start.id) return;
+    const dx = e.clientX - start.x, dy = e.clientY - start.y;
+    if (!dragged) {
+      if (Math.abs(dy) > 12 && Math.abs(dy) > Math.abs(dx)) { start = null; return; }
+      if (dx > -6) return;
+      dragged = true;
+      lineUp();
+      getSelection().removeAllRanges();
+      chat.classList.add('dragging');
+    }
+    const d = Math.max(-84, Math.min(0, dx * .7));
+    chat.style.setProperty('--drag', d + 'px');
+    chat.style.setProperty('--p', Math.min(1, -d / 64).toFixed(2));
+  });
+  const release = () => {
+    if (!start) return;
+    start = null;
+    if (!dragged) return;
+    chat.classList.remove('dragging');
+    chat.style.setProperty('--drag', '0px');
+    chat.style.setProperty('--p', '0');
+  };
+  addEventListener('pointerup', release);
+  addEventListener('pointercancel', release);
+  // a drag that ends on a link shouldn't open it
+  chat.addEventListener('click', e => {
+    if (dragged) { e.preventDefault(); e.stopPropagation(); dragged = false; }
+  }, true);
+
+  if (reduced) showAll();
+  else play();
+})();
+</script>
+</body>
+</html>
