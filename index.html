@@ -179,7 +179,52 @@
     box-shadow: 0 0 0 .5px rgba(0, 0, 0, .08);
     transition: transform .5s var(--spring);
   }
-  .avatar:hover { transform: scale(1.08) rotate(-4deg); }
+  .avatar-btn {
+    display: block;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    background: none;
+    cursor: zoom-in;
+  }
+  .avatar-btn:hover .avatar { transform: scale(1.08) rotate(-4deg); }
+  .avatar-btn:focus-visible { outline: 2px solid var(--blue); outline-offset: 3px; }
+
+  /* tapping the photo opens it bigger, growing out of the avatar */
+  .viewer {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: color-mix(in srgb, var(--bg) 55%, transparent);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+            backdrop-filter: blur(28px) saturate(160%);
+    cursor: zoom-out;
+    opacity: 0;
+    transition: opacity .35s var(--ease);
+  }
+  .viewer[hidden] { display: none; }
+  .viewer.on { opacity: 1; }
+  .viewer figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+  .viewer img {
+    display: block;
+    width: min(78vw, 360px, 68vh);
+    height: auto;
+    aspect-ratio: 1;
+    border-radius: 32px;
+    object-fit: cover;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, .25);
+  }
+  .viewer figcaption {
+    font-size: 12px;
+    color: var(--label-2);
+    opacity: 0;
+    transform: translateY(4px);
+    transition: opacity .3s var(--ease), transform .4s var(--spring);
+  }
+  .viewer.on figcaption { opacity: 1; transform: none; transition-delay: .15s; }
   .contact-name {
     display: inline-flex;
     align-items: center;
@@ -379,9 +424,18 @@
 </div>
 
 <header class="contact">
-  <img class="avatar" src="avatar.jpg" width="56" height="56" alt="enzo carrieri">
+  <button class="avatar-btn" type="button" aria-label="view enzo’s photo" aria-haspopup="dialog">
+    <img class="avatar" src="avatar.jpg" width="56" height="56" alt="">
+  </button>
   <span class="contact-name">enzo carrieri <svg viewBox="0 0 6 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 1l4 4-4 4"/></svg></span>
 </header>
+
+<div class="viewer" role="dialog" aria-modal="true" aria-label="enzo’s photo" hidden>
+  <figure>
+    <img src="avatar-large.jpg" width="800" height="800" alt="enzo carrieri" decoding="async">
+    <figcaption>enzo carrieri 🇧🇷🇮🇹</figcaption>
+  </figure>
+</div>
 
 <main>
   <section class="chat" aria-label="conversation with enzo carrieri">
@@ -546,6 +600,49 @@
     receipt.style.animation = '';
     markRead();
   };
+
+  /* ---------- photo viewer ---------- */
+  const avatarBtn = document.querySelector('.avatar-btn');
+  const avatar = avatarBtn.querySelector('.avatar');
+  const viewer = document.querySelector('.viewer');
+  const big = viewer.querySelector('img');
+  let viewerOpen = false;
+
+  // the big photo starts exactly over the small one and grows into place
+  const fromAvatar = () => {
+    const a = avatar.getBoundingClientRect(), b = big.getBoundingClientRect();
+    const dx = (a.left + a.width / 2) - (b.left + b.width / 2);
+    const dy = (a.top + a.height / 2) - (b.top + b.height / 2);
+    return [
+      { transform: `translate(${dx}px, ${dy}px) scale(${a.width / b.width})`, borderRadius: `${b.width / 2}px` },
+      { transform: 'none', borderRadius: '32px' }
+    ];
+  };
+  const openViewer = () => {
+    if (viewerOpen) return;
+    viewerOpen = true;
+    viewer.hidden = false;
+    void viewer.offsetWidth;
+    viewer.classList.add('on');
+    if (!reduced) {
+      avatar.style.visibility = 'hidden';
+      big.animate(fromAvatar(), { duration: 520, easing: 'cubic-bezier(.2, 1.15, .3, 1)' });
+    }
+    viewer.focus({ preventScroll: true });
+  };
+  const closeViewer = () => {
+    if (!viewerOpen) return;
+    viewerOpen = false;
+    viewer.classList.remove('on');
+    const done = () => { viewer.hidden = true; avatar.style.visibility = ''; avatarBtn.focus({ preventScroll: true }); };
+    if (reduced) return done();
+    big.animate(fromAvatar().reverse(), { duration: 380, easing: 'cubic-bezier(.4, 0, .2, 1)', fill: 'forwards' })
+      .finished.then(() => { done(); big.getAnimations().forEach(x => x.cancel()); });
+  };
+  viewer.tabIndex = -1;
+  avatarBtn.addEventListener('click', openViewer);
+  viewer.addEventListener('click', closeViewer);
+  addEventListener('keydown', e => { if (e.key === 'Escape') closeViewer(); });
 
   /* ---------- drag the chat left to reveal the times ---------- */
   const chat = document.querySelector('.chat');
